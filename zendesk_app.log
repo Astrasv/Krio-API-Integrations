@@ -1,0 +1,62 @@
+2025-05-16 20:12:28,071 - __main__ - INFO - Configuration loaded.
+2025-05-16 20:12:28,076 - zendesk_api - INFO - Zendesk client initialized successfully.
+2025-05-16 20:12:28,391 - database - INFO - Database tables created or verified.
+2025-05-16 20:12:28,391 - database - INFO - Database initialized at D:\AAA_Projects\A_ Git hosted\Zendesk-API-Integration\zendesk_data.db.
+2025-05-16 20:12:28,455 - zendesk_api - ERROR - Request error for search.json: HTTPSConnectionPool(host='your_subdomain.zendesk.com', port=443): Max retries exceeded with url: /api/v2/search.json?query=type%3Aticket+status%3Aopen (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'your_subdomain.zendesk.com'. (_ssl.c:1000)")))
+2025-05-16 20:12:28,457 - __main__ - ERROR - An error occurred: HTTPSConnectionPool(host='your_subdomain.zendesk.com', port=443): Max retries exceeded with url: /api/v2/search.json?query=type%3Aticket+status%3Aopen (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'your_subdomain.zendesk.com'. (_ssl.c:1000)")))
+2025-05-16 20:13:29,792 - __main__ - INFO - Configuration loaded.
+2025-05-16 20:13:29,792 - zendesk_api - INFO - Zendesk client initialized successfully.
+2025-05-16 20:13:29,795 - database - INFO - Database tables created or verified.
+2025-05-16 20:13:29,795 - database - INFO - Database initialized at D:\AAA_Projects\A_ Git hosted\Zendesk-API-Integration\zendesk_data.db.
+2025-05-16 20:13:29,837 - zendesk_api - ERROR - Request error for search.json: HTTPSConnectionPool(host='your_subdomain.zendesk.com', port=443): Max retries exceeded with url: /api/v2/search.json?query=type%3Aticket+status%3Aopen (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'your_subdomain.zendesk.com'. (_ssl.c:1000)")))
+2025-05-16 20:13:29,845 - __main__ - ERROR - An error occurred: HTTPSConnectionPool(host='your_subdomain.zendesk.com', port=443): Max retries exceeded with url: /api/v2/search.json?query=type%3Aticket+status%3Aopen (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'your_subdomain.zendesk.com'. (_ssl.c:1000)")))
+2025-05-16 20:14:28,391 - __main__ - INFO - Configuration loaded.
+2025-05-16 20:14:28,392 - zendesk_api - INFO - Zendesk client initialized successfully.
+2025-05-16 20:14:28,393 - database - INFO - Database tables created or verified.
+2025-05-16 20:14:28,393 - database - INFO - Database initialized at D:\AAA_Projects\A_ Git hosted\Zendesk-API-Integration\zendesk_data.db.
+2025-05-16 20:14:28,421 - zendesk_api - ERROR - Request error for search.json: HTTPSConnectionPool(host='your_subdomain.zendesk.com', port=443): Max retries exceeded with url: /api/v2/search.json?query=type%3Aticket+status%3Aopen (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'your_subdomain.zendesk.com'. (_ssl.c:1000)")))
+2025-05-16 20:14:28,422 - __main__ - ERROR - An error occurred: HTTPSConnectionPool(host='your_subdomain.zendesk.com', port=443): Max retries exceeded with url: /api/v2/search.json?query=type%3Aticket+status%3Aopen (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'your_subdomain.zendesk.com'. (_ssl.c:1000)")))
+2025-05-16 20:19:31,177 - __main__ - INFO - Configuration loaded.
+2025-05-16 20:19:31,180 - zendesk_api - INFO - Zendesk client initialized successfully.
+2025-05-16 20:19:31,197 - database - INFO - Database tables created or verified.
+2025-05-16 20:19:31,197 - database - INFO - Database initialized at D:\AAA_Projects\A_ Git hosted\Zendesk-API-Integration\zendesk_data.db.
+2025-05-16 20:19:31,231 - zendesk_api - ERROR - Request error for search.json: HTTPSConnectionPool(host='your_subdomain.zendesk.com', port=443): Max retries exceeded with url: /api/v2/search.json?query=type%3Aticket+status%3Aopen (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'your_subdomain.zendesk.com'. (_ssl.c:1000)")))
+2025-05-16 20:19:31,232 - __main__ - ERROR - An error occurred: HTTPSConnectionPool(host='your_subdomain.zendesk.com', port=443): Max retries exceeded with url: /api/v2/search.json?query=type%3Aticket+status%3Aopen (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'your_subdomain.zendesk.com'. (_ssl.c:1000)")))
+2025-05-16 20:21:49,255 - __main__ - INFO - Configuration loaded.
+2025-05-16 20:21:49,259 - __main__ - ERROR - An error occurred: 'zendesk_subdomain'
+2025-05-16 20:23:27,871 - __main__ - INFO - Configuration loaded.
+2025-05-16 20:23:27,872 - zendesk_api - INFO - Zendesk client initialized successfully.
+2025-05-16 20:23:27,927 - database - INFO - Database tables created or verified.
+2025-05-16 20:23:27,927 - database - INFO - Database initialized at zendesk_data.db.
+2025-05-16 20:23:28,676 - zendesk_api - INFO - Fetched 6 tickets so far.
+2025-05-16 20:23:28,676 - __main__ - INFO - Processing ticket 1.
+2025-05-16 20:23:29,234 - zendesk_api - INFO - Fetched 1 comments for ticket 1.
+2025-05-16 20:23:29,351 - database - INFO - Stored 1 comments and their metadata.
+2025-05-16 20:23:29,638 - zendesk_api - INFO - Fetched user 27428647234461.
+2025-05-16 20:23:29,758 - database - INFO - Stored user 27428647234461.
+2025-05-16 20:23:29,759 - __main__ - INFO - Processing ticket 5.
+2025-05-16 20:23:30,655 - zendesk_api - INFO - Fetched 1 comments for ticket 5.
+2025-05-16 20:23:30,775 - database - INFO - Stored 1 comments and their metadata.
+2025-05-16 20:23:31,356 - zendesk_api - INFO - Fetched user 27428721904541.
+2025-05-16 20:23:31,475 - database - INFO - Stored user 27428721904541.
+2025-05-16 20:23:31,475 - __main__ - INFO - Processing ticket 4.
+2025-05-16 20:23:31,741 - zendesk_api - INFO - Fetched 1 comments for ticket 4.
+2025-05-16 20:23:31,872 - database - INFO - Stored 1 comments and their metadata.
+2025-05-16 20:23:32,454 - zendesk_api - INFO - Fetched user 27428691606045.
+2025-05-16 20:23:32,589 - database - INFO - Stored user 27428691606045.
+2025-05-16 20:23:32,590 - __main__ - INFO - Processing ticket 3.
+2025-05-16 20:23:32,859 - zendesk_api - INFO - Fetched 1 comments for ticket 3.
+2025-05-16 20:23:32,965 - database - INFO - Stored 1 comments and their metadata.
+2025-05-16 20:23:33,537 - zendesk_api - INFO - Fetched user 27428691640349.
+2025-05-16 20:23:33,631 - database - INFO - Stored user 27428691640349.
+2025-05-16 20:23:33,632 - __main__ - INFO - Processing ticket 2.
+2025-05-16 20:23:33,916 - zendesk_api - INFO - Fetched 1 comments for ticket 2.
+2025-05-16 20:23:34,028 - database - INFO - Stored 1 comments and their metadata.
+2025-05-16 20:23:34,601 - zendesk_api - INFO - Fetched user 27428691606045.
+2025-05-16 20:23:34,701 - database - INFO - Stored user 27428691606045.
+2025-05-16 20:23:34,702 - __main__ - INFO - Processing ticket 6.
+2025-05-16 20:23:34,973 - zendesk_api - INFO - Fetched 1 comments for ticket 6.
+2025-05-16 20:23:35,055 - database - INFO - Stored 1 comments and their metadata.
+2025-05-16 20:23:35,350 - zendesk_api - INFO - Fetched user 27428692505117.
+2025-05-16 20:23:35,443 - database - INFO - Stored user 27428692505117.
+2025-05-16 20:23:35,443 - __main__ - INFO - Data fetching and storage completed successfully.
