@@ -62,7 +62,7 @@ def main():
         logger.info("Fetching Zendesk tickets...")
         tickets = zendesk.fetch_tickets(query="type:ticket status:open")
         for ticket in tickets:
-            ticket["metadata"] = ticket.get("custom_fields", {})
+            ticket["metadata"] = ticket.get("custom_fields", [])  # Ensure metadata is a list
         db.store_tickets(tickets)
 
         logger.info("Processing Zendesk tickets for comments and users...")

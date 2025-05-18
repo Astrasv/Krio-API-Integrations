@@ -4,8 +4,7 @@ from typing import Dict
 from dotenv import load_dotenv
 
 def load_config() -> Dict[str, str]:
-    """Load configuration from environment variables or .env file."""
-    load_dotenv()  # Load .env file
+    load_dotenv() 
     config = {
         # HubSpot configuration
         'hubspot_access_token': os.getenv('HUBSPOT_ACCESS_TOKEN'),

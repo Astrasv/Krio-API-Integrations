@@ -2,3 +2,4 @@
 __pycache__
 zendesk_app.log
 zendesk_data.db
+crm_app.log

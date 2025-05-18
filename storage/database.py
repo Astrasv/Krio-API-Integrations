@@ -222,12 +222,15 @@ class Database:
                     ticket.get("status", ""),
                     ticket.get("created_at", "")
                 ))
-                # Store metadata
-                for key, value in ticket.get("metadata", {}).items():
-                    cursor.execute('''
-                        INSERT OR REPLACE INTO zendesk_metadata (entity_type, entity_id, key, value)
-                        VALUES (?, ?, ?, ?)
-                    ''', ("ticket", ticket["id"], key, str(value)))
+                # Store metadata (custom_fields is a list of dictionaries)
+                for field in ticket.get("metadata", []):
+                    field_id = field.get("id")
+                    value = field.get("value")
+                    if field_id is not None and value is not None:
+                        cursor.execute('''
+                            INSERT OR REPLACE INTO zendesk_metadata (entity_type, entity_id, key, value)
+                            VALUES (?, ?, ?, ?)
+                        ''', ("ticket", ticket["id"], str(field_id), str(value)))
             conn.commit()
             logger.info(f"Stored {len(tickets)} tickets and their metadata.")
 
