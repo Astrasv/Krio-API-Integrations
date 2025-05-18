@@ -1,3 +1,3 @@
-# Zendesk API Integration
+# Krio API Integration
 
-This repository tests the Zendesk API
+This repository tests the Zendesk, Hubspots and other CRMs APIs
