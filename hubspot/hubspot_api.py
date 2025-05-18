@@ -2,6 +2,7 @@ import requests
 from typing import List, Dict, Any
 import logging
 import time
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -47,11 +48,24 @@ class HubSpotClient:
         contacts = []
         after = None
         while True:
-            params = {"limit": 100, "properties": ["firstname", "lastname", "email", "createdate", "lifecyclestage"]}
+            params = {"limit": 100, "properties": ["firstname", "lastname", "email", "createdate", "lastmodifieddate", "lifecyclestage"]}
             if after:
                 params["after"] = after
             data = self._make_request("objects/contacts", params=params)
-            contacts.extend(data.get("results", []))
+            for contact in data.get("results", []):
+                props = contact.get("properties", {})
+                payload = {k: v for k, v in contact.items() if k not in ["id", "properties", "createdAt", "updatedAt"]}
+                payload["properties"] = {k: v for k, v in props.items() if k not in ["firstname", "lastname", "email", "createdate", "lastmodifieddate", "lifecyclestage"]}
+                contacts.append({
+                    "id": contact["id"],
+                    "type": "contact",
+                    "name": f"{props.get('firstname', '')} {props.get('lastname', '')}".strip(),
+                    "email": props.get("email", ""),
+                    "created_at": props.get("createdate", ""),
+                    "updated_at": props.get("lastmodifieddate", ""),
+                    "source": "hubspot",
+                    "json_payload": json.dumps(payload)
+                })
             logger.info(f"Fetched {len(contacts)} contacts so far.")
             paging = data.get("paging")
             if not paging or not paging.get("next"):
@@ -64,11 +78,24 @@ class HubSpotClient:
         companies = []
         after = None
         while True:
-            params = {"limit": 100, "properties": ["name", "domain", "createdate"]}
+            params = {"limit": 100, "properties": ["name", "domain", "createdate", "lastmodifieddate"]}
             if after:
                 params["after"] = after
             data = self._make_request("objects/companies", params=params)
-            companies.extend(data.get("results", []))
+            for company in data.get("results", []):
+                props = company.get("properties", {})
+                payload = {k: v for k, v in company.items() if k not in ["id", "properties", "createdAt", "updatedAt"]}
+                payload["properties"] = {k: v for k, v in props.items() if k not in ["name", "domain", "createdate", "lastmodifieddate"]}
+                companies.append({
+                    "id": company["id"],
+                    "type": "company",
+                    "name": props.get("name", ""),
+                    "domain": props.get("domain", ""),
+                    "created_at": props.get("createdate", ""),
+                    "updated_at": props.get("lastmodifieddate", ""),
+                    "source": "hubspot",
+                    "json_payload": json.dumps(payload)
+                })
             logger.info(f"Fetched {len(companies)} companies so far.")
             paging = data.get("paging")
             if not paging or not paging.get("next"):
@@ -81,13 +108,15 @@ class HubSpotClient:
         contacts = self.fetch_contacts()
         leads = [
             {
-                "id": contact["id"],
-                "contact_id": contact["id"],
-                "lifecyclestage": contact["properties"].get("lifecyclestage", ""),
-                "created_at": contact["properties"].get("createdate", "")
+                "parent_type": "contact",
+                "parent_id": contact["id"],
+                "child_type": "lead",
+                "child_id": contact["id"],
+                "relationship_type": "lead_status",
+                "json_payload": json.dumps({"lifecyclestage": contact["json_payload"].get("properties", {}).get("lifecyclestage", "")})
             }
             for contact in contacts
-            if contact["properties"].get("lifecyclestage", "").lower() == "lead"
+            if json.loads(contact["json_payload"]).get("properties", {}).get("lifecyclestage", "").lower() == "lead"
         ]
         logger.info(f"Fetched {len(leads)} leads.")
         return leads
@@ -97,27 +126,28 @@ class HubSpotClient:
         deals = []
         after = None
         while True:
-            params = {"limit": 100, "properties": ["dealname", "amount", "dealstage", "createdate"]}
+            params = {"limit": 100, "properties": ["dealname", "amount", "dealstage", "createdate", "lastmodifieddate"]}
             if after:
                 params["after"] = after
             data = self._make_request("objects/deals", params=params)
-            deals.extend(data.get("results", []))
+            for deal in data.get("results", []):
+                props = deal.get("properties", {})
+                payload = {k: v for k, v in deal.items() if k not in ["id", "properties", "createdAt", "updatedAt"]}
+                payload["properties"] = {k: v for k, v in props.items() if k not in ["dealname", "amount", "dealstage", "createdate", "lastmodifieddate"]}
+                deals.append({
+                    "id": deal["id"],
+                    "type": "deal",
+                    "name": props.get("dealname", ""),
+                    "status": props.get("dealstage", ""),
+                    "amount": props.get("amount", ""),
+                    "created_at": props.get("createdate", ""),
+                    "updated_at": props.get("lastmodifieddate", ""),
+                    "source": "hubspot",
+                    "json_payload": json.dumps(payload)
+                })
             logger.info(f"Fetched {len(deals)} deals so far.")
             paging = data.get("paging")
             if not paging or not paging.get("next"):
                 break
             after = paging["next"]["after"]
         return deals
-
-    def fetch_metadata(self, entity_type: str, entity: Dict) -> List[Dict[str, Any]]:
-        """Extract metadata (properties) for a HubSpot entity."""
-        metadata = []
-        properties = entity.get("properties", {})
-        for key, value in properties.items():
-            metadata.append({
-                "entity_type": entity_type,
-                "entity_id": entity["id"],
-                "key": key,
-                "value": str(value) if value is not None else ""
-            })
-        return metadata

@@ -24,6 +24,7 @@ def main():
 
         # Initialize database
         db = Database(config['database_path'])
+        logger.info(f"Using database at: {config['database_path']}")
 
         # Initialize HubSpot client
         hubspot = HubSpotClient(access_token=config['hubspot_access_token'])
@@ -31,25 +32,23 @@ def main():
         # Fetch and store HubSpot data
         logger.info("Fetching HubSpot contacts...")
         contacts = hubspot.fetch_contacts()
-        for contact in contacts:
-            contact["metadata"] = hubspot.fetch_metadata("contact", contact)
-        db.store_contacts(contacts)
+        logger.info(f"Fetched {len(contacts)} contacts.")
+        db.store_entities(contacts)
 
         logger.info("Fetching HubSpot companies...")
         companies = hubspot.fetch_companies()
-        for company in companies:
-            company["metadata"] = hubspot.fetch_metadata("company", company)
-        db.store_companies(companies)
+        logger.info(f"Fetched {len(companies)} companies.")
+        db.store_entities(companies)
 
         logger.info("Fetching HubSpot leads...")
         leads = hubspot.fetch_leads()
-        db.store_leads(leads)
+        logger.info(f"Fetched {len(leads)} leads.")
+        db.store_relationships(leads)
 
         logger.info("Fetching HubSpot deals...")
         deals = hubspot.fetch_deals()
-        for deal in deals:
-            deal["metadata"] = hubspot.fetch_metadata("deal", deal)
-        db.store_deals(deals)
+        logger.info(f"Fetched {len(deals)} deals.")
+        db.store_entities(deals)
 
         # Initialize Zendesk client
         zendesk = ZendeskClient(
@@ -61,21 +60,22 @@ def main():
         # Fetch and store Zendesk data
         logger.info("Fetching Zendesk tickets...")
         tickets = zendesk.fetch_tickets(query="type:ticket status:open")
-        for ticket in tickets:
-            ticket["metadata"] = ticket.get("custom_fields", [])  # Ensure metadata is a list
-        db.store_tickets(tickets)
+        logger.info(f"Fetched {len(tickets)} tickets.")
+        db.store_entities(tickets)
 
         logger.info("Processing Zendesk tickets for comments and users...")
         unique_users = set()
         for ticket in tickets:
-            comments = zendesk.fetch_comments_metadata(ticket['id'])
-            db.store_comments(comments)
+            comments = zendesk.fetch_comments(ticket['id'])
+            logger.info(f"Fetched {len(comments)} comments for ticket {ticket['id']}.")
+            db.store_interactions(comments)
             user_ids = {comment['author_id'] for comment in comments}
             unique_users.update(user_ids)
 
         logger.info("Fetching Zendesk users...")
         users = [zendesk.fetch_user(user_id) for user_id in unique_users]
-        db.store_users(users)
+        logger.info(f"Fetched {len(users)} users.")
+        db.store_entities(users)
 
         logger.info("Data fetching and storage completed successfully.")
 

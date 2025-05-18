@@ -3,6 +3,7 @@ from requests.auth import HTTPBasicAuth
 from typing import List, Dict, Any
 import logging
 import time
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,18 @@ class ZendeskClient:
         params = {"query": query}
         while True:
             data = self._make_request("search.json", params=params)
-            tickets.extend(data.get("results", []))
+            for ticket in data.get("results", []):
+                payload = {k: v for k, v in ticket.items() if k not in ["id", "subject", "status", "created_at", "updated_at"]}
+                tickets.append({
+                    "id": ticket["id"],
+                    "type": "ticket",
+                    "name": ticket.get("subject", ""),
+                    "status": ticket.get("status", ""),
+                    "created_at": ticket.get("created_at", ""),
+                    "updated_at": ticket.get("updated_at", ""),
+                    "source": "zendesk",
+                    "json_payload": json.dumps(payload)
+                })
             logger.info(f"Fetched {len(tickets)} tickets so far.")
             next_page = data.get("next_page")
             if not next_page:
@@ -60,7 +72,20 @@ class ZendeskClient:
     def fetch_comments(self, ticket_id: int) -> List[Dict]:
         """Fetch comments for a specific ticket."""
         data = self._make_request(f"tickets/{ticket_id}/comments.json")
-        comments = data.get("comments", [])
+        comments = []
+        for comment in data.get("comments", []):
+            payload = {k: v for k, v in comment.items() if k not in ["id", "ticket_id", "author_id", "body", "created_at", "public"]}
+            comments.append({
+                "id": comment["id"],
+                "entity_type": "ticket",
+                "entity_id": ticket_id,
+                "author_id": comment["author_id"],
+                "body": comment.get("body", ""),
+                "created_at": comment.get("created_at", ""),
+                "is_public": comment.get("public", True),
+                "source": "zendesk",
+                "json_payload": json.dumps(payload)
+            })
         logger.info(f"Fetched {len(comments)} comments for ticket {ticket_id}.")
         return comments
 
@@ -68,22 +93,17 @@ class ZendeskClient:
         """Fetch user details by ID."""
         data = self._make_request(f"users/{user_id}.json")
         user = data.get("user", {})
+        payload = {k: v for k, v in user.items() if k not in ["id", "name", "email", "role", "created_at", "updated_at"]}
+        result = {
+            "id": user.get("id"),
+            "type": "user",
+            "name": user.get("name", ""),
+            "email": user.get("email", ""),
+            "role": user.get("role", ""),
+            "created_at": user.get("created_at", ""),
+            "updated_at": user.get("updated_at", ""),
+            "source": "zendesk",
+            "json_payload": json.dumps(payload)
+        }
         logger.info(f"Fetched user {user_id}.")
-        return user
-
-    def fetch_comments_metadata(self, ticket_id: int) -> List[Dict[str, Any]]:
-        """Fetch comments with metadata for a ticket."""
-        comments = self.fetch_comments(ticket_id)
-        comments_data = []
-        for comment in comments:
-            metadata = comment.get("metadata", {}) or {}
-            comments_data.append({
-                "id": comment["id"],
-                "ticket_id": ticket_id,
-                "author_id": comment["author_id"],
-                "body": comment.get("body", ""),
-                "created_at": comment.get("created_at", ""),
-                "public": comment.get("public", True),
-                "metadata": metadata
-            })
-        return comments_data
+        return result
