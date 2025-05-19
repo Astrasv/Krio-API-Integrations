@@ -7,7 +7,7 @@ import json
 logger = logging.getLogger(__name__)
 
 class Database:
-    """Manage SQLite database operations for unified HubSpot and Zendesk data."""
+    """Manage SQLite database operations for unified HubSpot, Zendesk, and Google Play data."""
     
     def __init__(self, db_path: str):
         """Initialize database connection and create tables."""
@@ -21,7 +21,7 @@ class Database:
         logger.info(f"Database initialized at {db_path}.")
 
     def create_tables(self):
-        """Create unified tables for entities, relationships, and interactions."""
+        """Create unified tables for entities, relationships, interactions, and Google Play data."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             # Entities table (contacts, companies, deals, tickets, users)
@@ -66,6 +66,20 @@ class Database:
                     is_public BOOLEAN,
                     source TEXT,
                     json_payload TEXT
+                )
+            ''')
+            # Google Play data table (reviews)
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS google_play_data (
+                    id TEXT,
+                    type TEXT,
+                    package_name TEXT,
+                    rating TEXT,
+                    comment TEXT,
+                    created_at TEXT,
+                    source TEXT,
+                    json_payload TEXT,
+                    PRIMARY KEY (id, source)
                 )
             ''')
             conn.commit()
@@ -151,3 +165,29 @@ class Database:
                 ))
             conn.commit()
             logger.info(f"Stored {len(interactions)} interactions.")
+
+    def store_google_play_data(self, data: List[Dict]):
+        """Store Google Play data (reviews)."""
+        if not data:
+            logger.info("No Google Play data to store.")
+            return
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            for item in data:
+                cursor.execute('''
+                    INSERT OR REPLACE INTO google_play_data (
+                        id, type, package_name, rating, comment, created_at, source, json_payload
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    item.get("id"),
+                    item.get("type"),
+                    item.get("package_name"),
+                    item.get("rating"),
+                    item.get("comment", ""),
+                    item.get("created_at"),
+                    item.get("source"),
+                    item.get("json_payload")
+                ))
+            conn.commit()
+            logger.info(f"Stored {len(data)} Google Play data records.")

@@ -1,6 +1,4 @@
 .env
 __pycache__
-zendesk_app.log
-zendesk_data.db
 crm_data.db
 crm_app.log

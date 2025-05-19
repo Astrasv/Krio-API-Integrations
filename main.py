@@ -2,6 +2,7 @@ import logging
 from config import load_config
 from hubspot.hubspot_api import HubSpotClient
 from zendesk.zendesk_api import ZendeskClient
+from google_play.google_play_api import GooglePlayClient
 from storage.database import Database
 
 # Configure logging
@@ -16,7 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def main():
-    """Main function to fetch and store HubSpot and Zendesk data."""
+    """Main function to fetch and store HubSpot, Zendesk, and Google Play data."""
     try:
         # Load configuration
         config = load_config()
@@ -76,6 +77,21 @@ def main():
         users = [zendesk.fetch_user(user_id) for user_id in unique_users]
         logger.info(f"Fetched {len(users)} users.")
         db.store_entities(users)
+
+        # Initialize Google Play client
+        package_name = "com.freshdesk.helpdesk"  # Replace with your app's package name
+        google_play = GooglePlayClient(
+            client_id=config['google_play_client_id'],
+            client_secret=config['google_play_client_secret'],
+            refresh_token=config['google_play_refresh_token'],
+            package_name=package_name
+        )
+
+        # Fetch and store Google Play reviews
+        logger.info("Fetching Google Play reviews...")
+        reviews = google_play.fetch_reviews()
+        logger.info(f"Fetched {len(reviews)} reviews.")
+        db.store_google_play_data(reviews)
 
         logger.info("Data fetching and storage completed successfully.")
 
